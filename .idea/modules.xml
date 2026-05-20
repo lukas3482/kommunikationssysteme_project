@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/kommunikationssysteme_project.iml" filepath="$PROJECT_DIR$/kommunikationssysteme_project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/python_visu/python_visu.iml" filepath="$PROJECT_DIR$/python_visu/python_visu.iml" />
+      <module fileurl="file://$PROJECT_DIR$/raspberry_sensor/raspberry_sensor.iml" filepath="$PROJECT_DIR$/raspberry_sensor/raspberry_sensor.iml" />
+    </modules>
+  </component>
+</project>
