@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem \"G:\\\\Programmieren\\\\fhv\\\\kommunikationssysteme_project\\\\python_visu\" | Where-Object { $_.Name -ne \".venv\" } | Select-Object FullName)",
+      "PowerShell(Get-ChildItem \"G:\\\\Programmieren\\\\fhv\\\\kommunikationssysteme_project\\\\python_visu\" -Force | ForEach-Object { $_.FullName })",
+      "PowerShell(Get-ChildItem \"G:\\\\Programmieren\\\\fhv\\\\kommunikationssysteme_project\\\\python_visu\\\\ui\" -Force | ForEach-Object { $_.FullName })"
+    ]
+  }
+}
