@@ -2,7 +2,7 @@ from nicegui import ui
 
 
 class StatusBar:
-    def __init__(self, broker: str, port: int, topic: str) -> None:
+    def __init__(self, broker: str, port: int, topic: str):
         self._broker = broker
         self._port   = port
         self._topic  = topic
@@ -11,7 +11,7 @@ class StatusBar:
             self._label = ui.label()
             self._count = ui.label().classes("ml-auto font-mono text-sm")
 
-    def refresh(self, connected: bool, count: int) -> None:
+    def refresh(self, connected: bool, count: int):
         self._dot.classes(
             remove="text-green-600 text-red-600",
             add="text-green-600" if connected else "text-red-600",

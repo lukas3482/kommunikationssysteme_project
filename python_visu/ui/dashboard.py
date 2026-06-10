@@ -13,10 +13,10 @@ _SRC = {
 }
 
 
-def register(store: SensorStore, mqtt_client: MqttClient) -> None:
+def register(store: SensorStore, mqtt_client: MqttClient):
 
     @ui.page("/")
-    def _page() -> None:
+    def _page():
         ui.page_title("IMU Dashboard")
 
         with ui.column().classes("w-full max-w-5xl mx-auto p-4 gap-4"):
@@ -27,7 +27,7 @@ def register(store: SensorStore, mqtt_client: MqttClient) -> None:
 
             val_labels: dict[str, dict[str, ui.label]] = {}
 
-            def _val_card(key: str, title: str, unit: str) -> None:
+            def _val_card(key: str, title: str, unit: str):
                 with ui.card().classes("flex-1 min-w-44"):
                     ui.label(f"{title} [{unit}]").classes("text-sm font-semibold")
                     val_labels[key] = {}

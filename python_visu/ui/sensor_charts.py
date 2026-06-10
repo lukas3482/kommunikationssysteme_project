@@ -15,7 +15,7 @@ def _build_opts(title: str, unit: str) -> dict:
         "title": {"text": title, "left": "10", "top": "6"},
         "tooltip": {"trigger": "axis"},
         "legend": {"data": ["X", "Y", "Z"], "bottom": 4},
-        "grid": {"top": "16%", "bottom": "18%", "left": "9%", "right": "3%"},
+        "grid": {"top": "30%", "bottom": "18%", "left": "9%", "right": "3%"},
         "xAxis": {
             "type": "category",
             "data": [],

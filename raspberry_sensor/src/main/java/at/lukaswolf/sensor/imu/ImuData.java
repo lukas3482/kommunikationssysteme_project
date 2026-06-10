@@ -1,12 +1,14 @@
 package at.lukaswolf.sensor.imu;
 
+import java.util.Locale;
+
 public record ImuData(
         double accelX, double accelY, double accelZ,   // g
         double gyroX,  double gyroY,  double gyroZ,    // °/s
         double magX,   double magY,   double magZ      // Gauss
 ) {
     public String toJson() {
-        return String.format(
+        return String.format(Locale.ROOT,
             """
             {
               "timestamp": %d,
@@ -23,7 +25,7 @@ public record ImuData(
 
     @Override
     public String toString() {
-        return String.format(
+        return String.format(Locale.ROOT,
             "Accel[%.3f, %.3f, %.3f]g  Gyro[%.2f, %.2f, %.2f]°/s  Mag[%.3f, %.3f, %.3f]G",
             accelX, accelY, accelZ, gyroX, gyroY, gyroZ, magX, magY, magZ
         );
