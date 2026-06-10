@@ -1,0 +1,12 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+exclude = [".venv", ".claude", "__pycache__"]
+
+[tool.ruff.lint]
+# E9: Syntaxfehler, F: Pyflakes (undefined names, unused imports)
+select = ["E9", "F"]

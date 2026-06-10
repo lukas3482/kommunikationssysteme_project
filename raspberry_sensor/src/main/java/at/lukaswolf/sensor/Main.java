@@ -16,7 +16,6 @@ public class Main {
             imu.initialize();
             mqtt.connect();
 
-            // Graceful Shutdown bei SIGTERM / Ctrl+C
             Thread mainThread = Thread.currentThread();
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 System.out.println("\nSensor wird beendet...");
