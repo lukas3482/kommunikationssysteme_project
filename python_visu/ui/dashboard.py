@@ -2,7 +2,6 @@ from nicegui import ui
 
 import config
 from data.mqtt_client import MqttClient
-from data.store import SensorStore
 from ui.sensor_charts import SensorCharts
 from ui.status_bar import StatusBar
 
@@ -12,7 +11,7 @@ _SRC = {
 }
 
 
-def register(store: SensorStore, mqtt_client: MqttClient):
+def register(mqtt_client: MqttClient):
 
     @ui.page("/")
     def _page():
@@ -42,8 +41,8 @@ def register(store: SensorStore, mqtt_client: MqttClient):
             charts = SensorCharts()
 
         def _refresh():
-            snap = store.snapshot()
-            bar.refresh(mqtt_client.connected, store.count)
+            snap = mqtt_client.snapshot()
+            bar.refresh(mqtt_client.connected, mqtt_client.count)
 
             if snap is None:
                 return
