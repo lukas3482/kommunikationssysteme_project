@@ -8,10 +8,8 @@ import at.lukaswolf.sensor.mqtt.MqttPublisher;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        SensorConfig config = SensorConfig.load();
-
-        try (SenseHatImu imu = new SenseHatImu(config.getI2cBus(), config.getAgAddr(), config.getMagAddr());
-             MqttPublisher mqtt = new MqttPublisher(config)) {
+        try (SenseHatImu imu = new SenseHatImu(SensorConfig.I2C_BUS, SensorConfig.AG_ADDR);
+             MqttPublisher mqtt = new MqttPublisher()) {
 
             imu.initialize();
             mqtt.connect();
@@ -23,13 +21,13 @@ public class Main {
             }));
 
             System.out.printf("Sensor läuft – Topic: %s  Interval: %d ms%n",
-                    config.getTopic(), config.getIntervalMs());
+                    SensorConfig.TOPIC, SensorConfig.INTERVAL_MS);
 
             while (!Thread.currentThread().isInterrupted()) {
                 ImuData data = imu.read();
-                mqtt.publish(config.getTopic(), data.toJson());
+                mqtt.publish(SensorConfig.TOPIC, data.toJson());
                 System.out.println(data);
-                Thread.sleep(config.getIntervalMs());
+                Thread.sleep(SensorConfig.INTERVAL_MS);
             }
         }
 

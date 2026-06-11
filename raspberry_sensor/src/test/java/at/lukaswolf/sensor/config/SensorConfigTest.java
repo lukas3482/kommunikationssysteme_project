@@ -2,63 +2,47 @@ package at.lukaswolf.sensor.config;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class SensorConfigTest {
 
-    private SensorConfig load() throws IOException {
-        return SensorConfig.load();
+    @Test
+    void brokerUrl_isNotNullOrBlank() {
+        assertNotNull(SensorConfig.BROKER_URL);
+        assertFalse(SensorConfig.BROKER_URL.isBlank());
     }
 
     @Test
-    void load_doesNotThrow() {
-        assertDoesNotThrow(this::load);
+    void brokerUrl_startsWithTcp() {
+        assertTrue(SensorConfig.BROKER_URL.startsWith("tcp://") || SensorConfig.BROKER_URL.startsWith("ssl://"),
+                "Broker-URL muss mit tcp:// oder ssl:// beginnen, war: " + SensorConfig.BROKER_URL);
     }
 
     @Test
-    void brokerUrl_isNotNullOrBlank() throws IOException {
-        String url = load().getBrokerUrl();
-        assertNotNull(url);
-        assertFalse(url.isBlank());
+    void topic_isNotNullOrBlank() {
+        assertNotNull(SensorConfig.TOPIC);
+        assertFalse(SensorConfig.TOPIC.isBlank());
     }
 
     @Test
-    void brokerUrl_startsWithTcp() throws IOException {
-        // bundled config.properties sets tcp://… – verify protocol prefix
-        String url = load().getBrokerUrl();
-        assertTrue(url.startsWith("tcp://") || url.startsWith("ssl://"),
-                "Broker-URL muss mit tcp:// oder ssl:// beginnen, war: " + url);
+    void intervalMs_isPositive() {
+        assertTrue(SensorConfig.INTERVAL_MS > 0);
     }
 
     @Test
-    void topic_isNotNullOrBlank() throws IOException {
-        String topic = load().getTopic();
-        assertNotNull(topic);
-        assertFalse(topic.isBlank());
+    void i2cBus_isNonNegative() {
+        assertTrue(SensorConfig.I2C_BUS >= 0);
     }
 
     @Test
-    void intervalMs_isPositive() throws IOException {
-        assertTrue(load().getIntervalMs() > 0);
+    void qos_isValidRange() {
+        assertTrue(SensorConfig.QOS >= 0 && SensorConfig.QOS <= 2,
+                "QoS muss 0, 1 oder 2 sein, war: " + SensorConfig.QOS);
     }
 
     @Test
-    void i2cBus_isNonNegative() throws IOException {
-        assertTrue(load().getI2cBus() >= 0);
-    }
-
-    @Test
-    void qos_isValidRange() throws IOException {
-        int qos = load().getQos();
-        assertTrue(qos >= 0 && qos <= 2, "QoS muss 0, 1 oder 2 sein, war: " + qos);
-    }
-
-    @Test
-    void clientId_isNotNullOrBlank() throws IOException {
-        String id = load().getClientId();
-        assertNotNull(id);
-        assertFalse(id.isBlank());
+    void clientId_isNotNullOrBlank() {
+        assertNotNull(SensorConfig.CLIENT_ID);
+        assertFalse(SensorConfig.CLIENT_ID.isBlank());
     }
 }

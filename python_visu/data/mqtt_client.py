@@ -6,7 +6,7 @@ from data.store import SensorStore
 
 
 class MqttClient:
-    def __init__(self, broker: str, port: int, topic: str, store: SensorStore) -> None:
+    def __init__(self, broker: str, port: int, topic: str, store: SensorStore):
         self._topic     = topic
         self._store     = store
         self._connected = False
@@ -22,17 +22,17 @@ class MqttClient:
         except Exception as exc:
             print(f"MQTT connect error: {exc}")
 
-    def _on_connect(self, client, userdata, flags, rc: int) -> None:
+    def _on_connect(self, client, userdata, flags, rc: int):
         self._connected = rc == 0
         if rc == 0:
             client.subscribe(self._topic)
         else:
             print(f"MQTT refused, rc={rc}")
 
-    def _on_disconnect(self, client, userdata, rc: int) -> None:
+    def _on_disconnect(self, client, userdata, rc: int):
         self._connected = False
 
-    def _on_message(self, client, userdata, msg) -> None:
+    def _on_message(self, client, userdata, msg):
         try:
             self._store.push(json.loads(msg.payload))
         except Exception as exc:

@@ -9,7 +9,6 @@ from ui.status_bar import StatusBar
 _SRC = {
     "accel": "accelerometer",
     "gyro":  "gyroscope",
-    "mag":   "magnetometer",
 }
 
 
@@ -39,11 +38,10 @@ def register(store: SensorStore, mqtt_client: MqttClient):
             with ui.row().classes("w-full gap-3 flex-wrap"):
                 _val_card("accel", "Accelerometer", "g")
                 _val_card("gyro",  "Gyroscope",     "°/s")
-                _val_card("mag",   "Magnetometer",  "gauss")
 
             charts = SensorCharts()
 
-        def _refresh() -> None:
+        def _refresh():
             snap = store.snapshot()
             bar.refresh(mqtt_client.connected, store.count)
 

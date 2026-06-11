@@ -13,46 +13,37 @@ public class MqttPublisher implements AutoCloseable {
 
     private final MqttClient client;
     private final MqttConnectOptions options;
-    private final int qos;
 
-    public MqttPublisher(SensorConfig config) throws MqttException {
-        this.qos = config.getQos();
+    public MqttPublisher() throws MqttException {
+        this.options = new MqttConnectOptions();
+        this.options.setCleanSession(true);
+        this.options.setConnectionTimeout(10);
+        this.options.setKeepAliveInterval(30);
+        this.options.setAutomaticReconnect(true);
 
-        options = new MqttConnectOptions();
-        options.setCleanSession(true);
-        options.setConnectionTimeout(10);
-        options.setKeepAliveInterval(30);
-        options.setAutomaticReconnect(true);
-
-        String username = config.getUsername();
-        if (username != null && !username.isBlank()) {
-            options.setUserName(username);
-            options.setPassword(config.getPassword().toCharArray());
-        }
-
-        client = new MqttClient(config.getBrokerUrl(), config.getClientId(), new MemoryPersistence());
+        this.client = new MqttClient(SensorConfig.BROKER_URL, SensorConfig.CLIENT_ID, new MemoryPersistence());
     }
 
     public void connect() throws MqttException {
-        client.connect(options);
-        System.out.println("Verbunden mit MQTT Broker: " + client.getServerURI());
+        this.client.connect(options);
+        System.out.println("Verbunden zu MQTT: " + this.client.getServerURI());
     }
 
     public void publish(String topic, String payload) throws MqttException {
-        if (!client.isConnected()) {
-            System.err.println("MQTT nicht verbunden – Nachricht wird verworfen.");
+        if (!this.client.isConnected()) {
+            System.out.println("MQTT nicht verbunden...");
             return;
         }
         MqttMessage message = new MqttMessage(payload.getBytes(StandardCharsets.UTF_8));
-        message.setQos(qos);
-        client.publish(topic, message);
+        message.setQos(SensorConfig.QOS);
+        this.client.publish(topic, message);
     }
 
     @Override
     public void close() throws MqttException {
-        if (client.isConnected()) {
-            client.disconnect();
+        if (this.client.isConnected()) {
+            this.client.disconnect();
         }
-        client.close();
+        this.client.close();
     }
 }

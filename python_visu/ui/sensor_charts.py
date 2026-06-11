@@ -5,7 +5,6 @@ _AXIS_COLORS = {"x": "#ef4444", "y": "#22c55e", "z": "#3b82f6"}
 _SENSORS = [
     ("accel", "Accelerometer", "g"),
     ("gyro",  "Gyroscope",     "°/s"),
-    ("mag",   "Magnetometer",  "gauss"),
 ]
 
 
@@ -43,13 +42,13 @@ def _build_opts(title: str, unit: str) -> dict:
 
 
 class SensorCharts:
-    def __init__(self) -> None:
+    def __init__(self):
         self._charts: dict[str, ui.echart] = {}
         for key, title, unit in _SENSORS:
             with ui.card().classes("w-full"):
                 self._charts[key] = ui.echart(_build_opts(title, unit)).classes("w-full h-52")
 
-    def refresh(self, snap: dict) -> None:
+    def refresh(self, snap: dict):
         ts = snap["ts"]
         for key, _, _ in _SENSORS:
             self._charts[key].run_chart_method("setOption", {

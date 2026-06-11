@@ -5,24 +5,22 @@ from datetime import datetime
 
 
 class SensorStore:
-    def __init__(self, history: int = 150) -> None:
+    def __init__(self, history: int = 150):
         self._lock  = threading.Lock()
         self._ts    = deque(maxlen=history)
         self._buf   = {
             "accel": {ax: deque(maxlen=history) for ax in "xyz"},
             "gyro":  {ax: deque(maxlen=history) for ax in "xyz"},
-            "mag":   {ax: deque(maxlen=history) for ax in "xyz"},
         }
         self._latest: dict = {}
         self._count  = 0
 
-    def push(self, data: dict) -> None:
+    def push(self, data: dict):
         with self._lock:
             self._ts.append(data.get("timestamp", 0))
             for ax in "xyz":
                 self._buf["accel"][ax].append(data["accelerometer"][ax])
                 self._buf["gyro"][ax].append(data["gyroscope"][ax])
-                self._buf["mag"][ax].append(data["magnetometer"][ax])
             self._latest = data
             self._count += 1
 
@@ -38,7 +36,7 @@ class SensorStore:
                 ],
                 "series": {
                     grp: {ax: list(self._buf[grp][ax]) for ax in "xyz"}
-                    for grp in ("accel", "gyro", "mag")
+                    for grp in ("accel", "gyro")
                 },
                 "count": self._count,
             }
