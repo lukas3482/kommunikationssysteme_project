@@ -12,8 +12,7 @@ import com.pi4j.io.i2c.I2CConfig;
  */
 public class SenseHatImu implements AutoCloseable {
 
-    // QMI8658 Register
-    private static final int QMI8658_WHO_AM_I = 0x00; // erwartet: 0x05
+    private static final int QMI8658_WHO_AM_I = 0x00;
     private static final int QMI8658_CTRL1 = 0x02; // I2C / SPI Modus
     private static final int QMI8658_CTRL2 = 0x03; // Accelerometer config
     private static final int QMI8658_CTRL3 = 0x04; // Gyroscope config
@@ -21,13 +20,11 @@ public class SenseHatImu implements AutoCloseable {
     private static final int QMI8658_CTRL7 = 0x08; // Sensor enable
     private static final int QMI8658_AX_L = 0x35; // Accel X Low (Block 12 Bytes: Ax..Gz)
 
-    // QMI8658 CTRL7 Bits
     private static final int CTRL7_ACC_EN = 0x01;
     private static final int CTRL7_GYR_EN = 0x02;
 
-    // Sensitivitäten
-    private static final double ACCEL_SENS = 1.0 / 4096.0; // g/LSB (QMI8658 ±2g)
-    private static final double GYRO_SENS = 1.0 / 64.0; // °/s / LSB (QMI8658 ±512dps)
+    private static final double ACCEL_SENS = 1.0 / 4096.0;
+    private static final double GYRO_SENS = 1.0 / 64.0;
 
     private final Context pi4j;
     private final I2C qmi;
@@ -62,9 +59,9 @@ public class SenseHatImu implements AutoCloseable {
         calibrateGyro();
     }
 
-    /** Liest 32 Gyro-Samples und berechnet den Ruhewert-Offset. */
+
     private void calibrateGyro() throws InterruptedException {
-        System.out.println("Gyro-Kalibrierung (32 Samples)...");
+        System.out.println("Gyro-Kalibrierung ...");
         long sx = 0, sy = 0, sz = 0;
         for (int i = 0; i < 32; i++) {
             byte[] raw = readQmiBlock();
@@ -79,7 +76,6 @@ public class SenseHatImu implements AutoCloseable {
         System.out.printf("Gyro-Offset: X=%d  Y=%d  Z=%d%n", this.gyroOffset[0], this.gyroOffset[1], this.gyroOffset[2]);
     }
 
-    /** Liest 12 Bytes Accel+Gyro-Rohdaten (Ax_L … Gz_H) per Block-Read. */
     private byte[] readQmiBlock() {
         byte[] buf = new byte[12];
         this.qmi.readRegister(QMI8658_AX_L, buf, 0, 12);
@@ -100,7 +96,6 @@ public class SenseHatImu implements AutoCloseable {
         return new ImuData(ax, ay, az, gx, gy, gz);
     }
 
-    /** Little-Endian 16-Bit signed aus zwei Bytes. */
     private short toShort(byte[] buf, int offset) {
         return (short) (((buf[offset + 1] & 0xFF) << 8) | (buf[offset] & 0xFF));
     }
