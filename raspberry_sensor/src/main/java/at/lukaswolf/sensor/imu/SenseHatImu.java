@@ -5,11 +5,6 @@ import com.pi4j.context.Context;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
 
-/**
- * IMU-Treiber für den Waveshare Sense HAT (C).
- *
- * Chip: Accel/Gyro – QMI8658 (I2C 0x6B)
- */
 public class SenseHatImu implements AutoCloseable {
 
     private static final int QMI8658_WHO_AM_I = 0x00;

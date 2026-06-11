@@ -20,8 +20,7 @@ public class Main {
                 mainThread.interrupt();
             }));
 
-            System.out.printf("Sensor läuft – Topic: %s  Interval: %d ms%n",
-                    SensorConfig.TOPIC, SensorConfig.INTERVAL_MS);
+            System.out.printf("Sensor läuft...");
 
             while (!Thread.currentThread().isInterrupted()) {
                 ImuData data = imu.read();
