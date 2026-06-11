@@ -45,9 +45,9 @@ public class SenseHatImu implements AutoCloseable {
     private void initQmi8658() throws InterruptedException {
         int id = this.qmi.readRegister(QMI8658_WHO_AM_I);
         if (id != 0x05) {
-            throw new IllegalStateException("QMI8658 nicht gefunden – WHO_AM_I=0x" + Integer.toHexString(id));
+            throw new IllegalStateException("QMI8658 nicht gefunden WHO_AM_I=0x" + Integer.toHexString(id));
         }
-        System.out.printf("QMI8658 OK (WHO_AM_I=0x%02X, Rev=0x%02X)%n", id, this.qmi.readRegister(0x01));
+        System.out.printf("QMI8658 gefunden (WHO_AM_I=0x%02X, Rev=0x%02X)%n", id, this.qmi.readRegister(0x01));
 
         this.qmi.writeRegister(QMI8658_CTRL1, (byte) 0x60); // I2C Modus
         this.qmi.writeRegister(QMI8658_CTRL2, (byte) 0x03); // Accel: ±2g, 1000 Hz
