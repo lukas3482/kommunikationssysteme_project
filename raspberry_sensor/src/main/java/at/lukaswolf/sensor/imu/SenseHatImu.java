@@ -27,8 +27,6 @@ public class SenseHatImu implements AutoCloseable {
 
     public SenseHatImu(int i2cBus, int qmiAddr) {
         this.pi4j = Pi4J.newAutoContext();
-        System.out.printf("I2C Bus %d – QMI8658=0x%02X%n", i2cBus, qmiAddr);
-
         I2CConfig qmiCfg = I2C.newConfigBuilder(this.pi4j).id("QMI8658").bus(i2cBus).device(qmiAddr).build();
         this.qmi = this.pi4j.create(qmiCfg);
     }
@@ -42,7 +40,7 @@ public class SenseHatImu implements AutoCloseable {
         if (id != 0x05) {
             throw new IllegalStateException("QMI8658 nicht gefunden WHO_AM_I=0x" + Integer.toHexString(id));
         }
-        System.out.printf("QMI8658 gefunden (WHO_AM_I=0x%02X, Rev=0x%02X)%n", id, this.qmi.readRegister(0x01));
+        System.out.printf("QMI8658 gefunden");
 
         this.qmi.writeRegister(QMI8658_CTRL1, (byte) 0x60); // I2C Modus
         this.qmi.writeRegister(QMI8658_CTRL2, (byte) 0x03); // Accel: ±2g, 1000 Hz
