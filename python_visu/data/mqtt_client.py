@@ -71,10 +71,8 @@ class MqttClient:
                 "count": self._count,
             }
 
-    @property
     def connected(self) -> bool:
         return self._connected
 
-    @property
     def count(self) -> int:
         return self._count
