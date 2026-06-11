@@ -34,11 +34,11 @@ public class SenseHatImu implements AutoCloseable {
     private final int[] gyroOffset = {0, 0, 0};
 
     public SenseHatImu(int i2cBus, int qmiAddr) {
-        pi4j = Pi4J.newAutoContext();
+        this.pi4j = Pi4J.newAutoContext();
         System.out.printf("I2C Bus %d – QMI8658=0x%02X%n", i2cBus, qmiAddr);
 
-        I2CConfig qmiCfg = I2C.newConfigBuilder(pi4j).id("QMI8658").bus(i2cBus).device(qmiAddr).build();
-        qmi = pi4j.create(qmiCfg);
+        I2CConfig qmiCfg = I2C.newConfigBuilder(this.pi4j).id("QMI8658").bus(i2cBus).device(qmiAddr).build();
+        this.qmi = this.pi4j.create(qmiCfg);
     }
 
     public void initialize() throws InterruptedException {
@@ -46,17 +46,17 @@ public class SenseHatImu implements AutoCloseable {
     }
 
     private void initQmi8658() throws InterruptedException {
-        int id = qmi.readRegister(QMI8658_WHO_AM_I);
+        int id = this.qmi.readRegister(QMI8658_WHO_AM_I);
         if (id != 0x05) {
             throw new IllegalStateException("QMI8658 nicht gefunden – WHO_AM_I=0x" + Integer.toHexString(id));
         }
-        System.out.printf("QMI8658 OK (WHO_AM_I=0x%02X, Rev=0x%02X)%n", id, qmi.readRegister(0x01));
+        System.out.printf("QMI8658 OK (WHO_AM_I=0x%02X, Rev=0x%02X)%n", id, this.qmi.readRegister(0x01));
 
-        qmi.writeRegister(QMI8658_CTRL1, (byte) 0x60); // I2C Modus
-        qmi.writeRegister(QMI8658_CTRL2, (byte) 0x03); // Accel: ±2g, 1000 Hz
-        qmi.writeRegister(QMI8658_CTRL3, (byte) 0x54); // Gyro: ±512dps, 500 Hz
-        qmi.writeRegister(QMI8658_CTRL5, (byte) 0x00); // kein Low-Pass Filter
-        qmi.writeRegister(QMI8658_CTRL7, (byte) (CTRL7_ACC_EN | CTRL7_GYR_EN | 0x80)); // Accel + Gyro an
+        this.qmi.writeRegister(QMI8658_CTRL1, (byte) 0x60); // I2C Modus
+        this.qmi.writeRegister(QMI8658_CTRL2, (byte) 0x03); // Accel: ±2g, 1000 Hz
+        this.qmi.writeRegister(QMI8658_CTRL3, (byte) 0x54); // Gyro: ±512dps, 500 Hz
+        this.qmi.writeRegister(QMI8658_CTRL5, (byte) 0x00); // kein Low-Pass Filter
+        this.qmi.writeRegister(QMI8658_CTRL7, (byte) (CTRL7_ACC_EN | CTRL7_GYR_EN | 0x80)); // Accel + Gyro an
 
         Thread.sleep(50);
         calibrateGyro();
@@ -73,16 +73,16 @@ public class SenseHatImu implements AutoCloseable {
             sz += toShort(raw, 10);
             Thread.sleep(10);
         }
-        gyroOffset[0] = (int) (sx >> 5);
-        gyroOffset[1] = (int) (sy >> 5);
-        gyroOffset[2] = (int) (sz >> 5);
-        System.out.printf("Gyro-Offset: X=%d  Y=%d  Z=%d%n", gyroOffset[0], gyroOffset[1], gyroOffset[2]);
+        this.gyroOffset[0] = (int) (sx >> 5);
+        this.gyroOffset[1] = (int) (sy >> 5);
+        this.gyroOffset[2] = (int) (sz >> 5);
+        System.out.printf("Gyro-Offset: X=%d  Y=%d  Z=%d%n", this.gyroOffset[0], this.gyroOffset[1], this.gyroOffset[2]);
     }
 
     /** Liest 12 Bytes Accel+Gyro-Rohdaten (Ax_L … Gz_H) per Block-Read. */
     private byte[] readQmiBlock() {
         byte[] buf = new byte[12];
-        qmi.readRegister(QMI8658_AX_L, buf, 0, 12);
+        this.qmi.readRegister(QMI8658_AX_L, buf, 0, 12);
         return buf;
     }
 
@@ -93,9 +93,9 @@ public class SenseHatImu implements AutoCloseable {
         double ay = toShort(raw, 2) * ACCEL_SENS;
         double az = toShort(raw, 4) * ACCEL_SENS;
 
-        double gx = (toShort(raw, 6) - gyroOffset[0]) * GYRO_SENS;
-        double gy = (toShort(raw, 8) - gyroOffset[1]) * GYRO_SENS;
-        double gz = (toShort(raw, 10) - gyroOffset[2]) * GYRO_SENS;
+        double gx = (toShort(raw, 6) - this.gyroOffset[0]) * GYRO_SENS;
+        double gy = (toShort(raw, 8) - this.gyroOffset[1]) * GYRO_SENS;
+        double gz = (toShort(raw, 10) - this.gyroOffset[2]) * GYRO_SENS;
 
         return new ImuData(ax, ay, az, gx, gy, gz);
     }
@@ -107,6 +107,6 @@ public class SenseHatImu implements AutoCloseable {
 
     @Override
     public void close() {
-        pi4j.shutdown();
+        this.pi4j.shutdown();
     }
 }

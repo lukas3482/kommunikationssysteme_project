@@ -31,8 +31,8 @@ public class ImuData {
               "gyroscope":     {"x": %.4f, "y": %.4f, "z": %.4f, "unit": "deg/s"}
             }""",
             System.currentTimeMillis(),
-            accelX, accelY, accelZ,
-            gyroX, gyroY, gyroZ
+            this.accelX, this.accelY, this.accelZ,
+            this.gyroX, this.gyroY, this.gyroZ
         );
     }
 
@@ -40,7 +40,7 @@ public class ImuData {
     public String toString() {
         return String.format(Locale.ROOT,
             "Accel[%.3f, %.3f, %.3f]g  Gyro[%.2f, %.2f, %.2f]°/s",
-            accelX, accelY, accelZ, gyroX, gyroY, gyroZ
+            this.accelX, this.accelY, this.accelZ, this.gyroX, this.gyroY, this.gyroZ
         );
     }
 }
